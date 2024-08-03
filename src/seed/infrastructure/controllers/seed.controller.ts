@@ -1,12 +1,14 @@
 import { HttpService } from '@nestjs/axios';
-import { Controller, Get, HttpException } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { ControllerContract } from 'src/common/infrastruture/controller/contract/controller.contract';
 import { PrismaService } from 'src/common/infrastruture/database/database.connection.service';
 import { CharacterResponse } from './types/character-response/api-character.response';
 import { ConcreteUUIDGenerator } from 'src/common/infrastruture/uuid/concrete.uuid.generator';
 import { Gender } from '@prisma/client';
 import { EpisodeResponse } from './types/episode-response/api-episode.response';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Seed')
 @Controller('seed')
 export class SeedController implements ControllerContract<[], any> {
   constructor(
@@ -15,7 +17,7 @@ export class SeedController implements ControllerContract<[], any> {
     private idGenerator: ConcreteUUIDGenerator,
   ) {}
 
-  @Get()
+  @Post()
   async execute(): Promise<any> {
     const characterStatusId = this.idGenerator.generate();
     const episodesStatusId = this.idGenerator.generate();
