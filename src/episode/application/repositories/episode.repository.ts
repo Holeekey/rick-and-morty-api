@@ -10,6 +10,6 @@ export interface EpisodeRepository {
     statusId?: string,
   ): Promise<Episode[]>;
   getOne(id: string): Promise<Optional<Episode>>;
-  save(character: Episode): Promise<Result<Episode>>;
-  existsBySeason(character: Episode): Promise<boolean>;
+  save(episode: Episode): Promise<Result<Episode>>;
+  existsBySeason(episode: Episode): Promise<boolean>;
 }

@@ -9,6 +9,23 @@ import { Injectable } from '@nestjs/common';
 export class EpisodeRepositoryPostgres implements EpisodeRepository {
   constructor(private prisma: PrismaService) {}
 
+  async upsertSeason(season: string) {
+    await this.prisma.subcategory.upsert({
+      where: {
+        name: season,
+      },
+      create: {
+        name: season,
+        categoryId: (
+          await this.prisma.category.findUnique({
+            where: { name: 'SEASON' },
+          })
+        ).id,
+      },
+      update: {},
+    });
+  }
+
   async getMany(
     page: number,
     perPage: number,
@@ -58,9 +75,43 @@ export class EpisodeRepositoryPostgres implements EpisodeRepository {
     };
   }
   async save(episode: Episode): Promise<Result<Episode>> {
+    await this.prisma.episode.upsert({
+      where: {
+        id: episode.id,
+      },
+      create: {
+        id: episode.id,
+        name: episode.name,
+        code: episode.code,
+        seasonId: episode.seasonId,
+        epsiodeStatusId: episode.statusId,
+        aireDate: episode.aireDate,
+        minutesDuration: episode.minutesDuration,
+        secondsDuration: episode.secondsDuration,
+      },
+      update: {
+        name: episode.name,
+        code: episode.code,
+        seasonId: episode.seasonId,
+        epsiodeStatusId: episode.statusId,
+        aireDate: episode.aireDate,
+        minutesDuration: episode.minutesDuration,
+        secondsDuration: episode.secondsDuration,
+      },
+    });
     return Result.success(episode);
   }
   async existsBySeason(episode: Episode): Promise<boolean> {
-    return false;
+    const possibleEpisode = await this.prisma.episode.findFirst({
+      where: {
+        id: {
+          not: episode.id,
+        },
+        name: episode.name,
+        seasonId: episode.seasonId,
+      },
+    });
+
+    return possibleEpisode != undefined;
   }
 }
