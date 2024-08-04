@@ -4,9 +4,10 @@ import { EpisodeRepositoryPostgres } from '../repositories/episode.repository';
 import { EpisodeStatusRepositoryPostgres } from '../repositories/status.repository';
 import { SeasonRepositoryPostgres } from '../repositories/season.repository';
 import { FindManyEpisodesController } from '../controllers/find-many/find-many-episodes.controller';
+import { FindOneEpisodeController } from '../controllers/find-one/find-one-episode.controller';
 
 @Module({
-  controllers: [FindManyEpisodesController],
+  controllers: [FindManyEpisodesController, FindOneEpisodeController],
   providers: [
     EpisodeRepositoryPostgres,
     EpisodeStatusRepositoryPostgres,
