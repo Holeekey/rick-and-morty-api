@@ -63,6 +63,8 @@ export class EpisodeRepositoryPostgres implements EpisodeRepository {
   async getOne(id: string): Promise<Optional<Episode>> {
     const episode = await this.prisma.episode.findUnique({ where: { id: id } });
 
+    if (!episode) return undefined;
+
     return {
       id: episode.id,
       name: episode.name,
